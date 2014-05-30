@@ -6,7 +6,7 @@ public class TwoDimArray {
 		for (int i=0;i<=3;i++){
 			sum += array[row][i];
 		}
-		return sum/4;
+		return (double)sum/4.0;
 	}
 	public static double arrayAllAverages(int[][] array){
 		int sum=0;
@@ -15,7 +15,7 @@ public class TwoDimArray {
 				sum+=array[i][j];
 			}
 		}
-		return sum/12;
+		return (double)sum/12.0;
 	}
 	public static int arrayMaxElement(int[][] array){
 		int max=0;
@@ -23,7 +23,6 @@ public class TwoDimArray {
 			for (int j=0;j<=3;j++){
 				if (max < array[i][j])
 					max = array[i][j];
-				
 			}
 		}
 		return max;
@@ -38,18 +37,27 @@ public class TwoDimArray {
 		}
 		return min;
 	}
+	/*
+	public static void printArray(int[][] array){
+		for (int i=0;i<=2;i++){
+			for (int j=0;j<=3;j++)
+				System.out.print(" " + array[i][j]);
+			System.out.println();
+		}
+	}*/
 	public static void main(String[] args) {
 		int[][] array = new int[][]{{1,2,3,4},
 									{5,6,7,8},
 									{9,10,11,12}};
-		System.out.println(array.length);
-		System.out.println(array[0].length);
 		System.out.println("average of row 0 is " + arrayGroupAverages(array, 0));
 		System.out.println("average of row 1 is " + arrayGroupAverages(array, 1));
 		System.out.println("average of row 2 is " + arrayGroupAverages(array, 2));
 		System.out.println("average of all elements is " + arrayAllAverages(array));
 		System.out.println("max element is " + arrayMaxElement(array));
 		System.out.println("min element is " + arrayMinElement(array));
+		// System.out.println(array.length);
+		// System.out.println(array[0].length);
+		// printArray(array);
 	}
 
 }
