@@ -1,89 +1,92 @@
 package textBook;
-
 public class Exercise5_2_mouse {
-	static int x = 1, y = 0;		// current location of mouse, origin is at top left of maze
+	int x = 1, y = 0;				// current location of mouse, origin is at top left of maze
 									// destination is x=6, y=5
-	static int front_x = x, front_y = y;
-	static int right_x = x, right_y = y;
+	int front_x = x, front_y = y;
+	int right_x = x, right_y = y;
+	int left_x = x, left_y = y;
+	int heading = 0;
 	Exercise5_2_maze maze1 = new Exercise5_2_maze();
-	/* return 1: we arrived!
-	 * return 2: it was a walkable grid and have a wall at right side, keep walking
-	 * return 3: it wasn't a walkable grid or had a walkable grid at right side, turn right and keep walking
+	/* Ok here's the new method.  Mouse should know which (absolute) direction Main wants it to check,
+	 * check (relative) right, front, left grids, then let Main know which grid(s) are walkable.
+	 * Main should tell Mouse to "keep to the right side".
 	 */
-	/* Also putting in right-side wall detection.
-	 * face_direction is u	front_x=x-1	front_y=y
-	 * 						right_x=x	right_y=y+1
-	 * face_direction is r	front_x=x	front_y=y+1
-	 * 						right_x=x+1	right_y=y
-	 * face_direction is d	front_x=x+1	front_y=y
-	 * 						right_x=x	right_y=y-1
-	 * face_direction is l	front_x=x	front_y=y-1
-	 * 						right_x=x-1	right_y=y
-	 * Also need to circumvent crossroads.  If both front and right are walkable, go right and tell main we need to turn once.
-	 */
-	public int walker(char face_direction){		
-		if (face_direction == 'u'){
+	public int feeler(int look_direction){		// looking north(absolute)
+		System.out.println("Checking directions, mouse is now at " + x + "," + y + ", heading " + look_direction);
+		if (look_direction == 0){
 			front_x = x - 1;
 			front_y = y;
 			right_x = x;
 			right_y = y + 1;
+			left_x = x;
+			left_y = y - 1;
 			//System.out.println("we got a u");
 		}
-		if (face_direction == 'd'){
-			front_x = x + 1;
-			front_y = y;
-			right_y = y - 1;
-			right_x = x;
-			//System.out.println("we got a d");
-		}
-		if (face_direction == 'r'){
+		if (look_direction == 1){				// looking east(absolute)
 			front_x = x;
 			front_y = y + 1;
 			right_x = x + 1;
 			right_y = y;
+			left_x = x - 1;
+			left_y = y;
 			//System.out.println("we got a r");
 		}
-		if (face_direction == 'l'){
+		if (look_direction == 2){				// looking south(absolute)
+			front_x = x + 1;
+			front_y = y;
+			right_y = y - 1;
+			right_x = x;
+			left_x = x;
+			left_y = y + 1;
+			//System.out.println("we got a d");
+		}
+		if (look_direction == 3){				// looking west(absolute)
 			front_x = x;
 			front_y = y - 1;
 			right_x = x - 1;
 			right_y = y;
+			left_x = x + 1;
+			left_y = y;
 			//System.out.println("we got a l");
 		}
-		// now we have 'front' and 'right side' x,y
-		System.out.println("front_x:" + front_x + " front_y:" + front_y);
-		if (front_x==6 && front_y==5){
-			x = front_x;
-			y = front_y;
-			System.out.println("WE ARRIVED!! x: " + x + " y: " + y);
-			return 1;
+		
+		int mouse_return = 0;				// +1, +2, +4 if right, front, left side is walkable
+		if (maze1.isThisWalkable(right_x, right_y))
+			mouse_return += 1;
+		if (maze1.isThisWalkable(front_x, front_y))
+			mouse_return += 2;
+		if (maze1.isThisWalkable(left_x, left_y))
+			mouse_return += 4;
+		return mouse_return;
+	}	// end feeler()
+	public void set_heading(int heading_from_main){
+		heading = heading_from_main;
+	}
+	public boolean walker(){
+		if (heading == 0){
+			x = x - 1;
+			//System.out.println("we got a u");
 		}
-		// mouse isn't there yet, now we ask maze if this grid is walkable
-		if (maze1.isThisWalkable(front_x, front_y)){
-			if (!maze1.isThisWalkable(right_x, right_y)){		// we have walkable space in front, wall at right
-				x = front_x;									// should go front
-				y = front_y;
-				System.out.println("good step, mouse is at " + x + "," + y);
-				return 2;
-			}
-			else{												// we have walkable space in front and right
-																// 
-				x = right_x;
-				y = right_y;
-				System.out.println("we just sidestepped to the right, need to turn, mouse is at " + x + "," + y);
-				return 3;
-			}
+		if (heading == 1){
+			y = y + 1;
+			//System.out.println("we got a r");
 		}
-		// grid isn't walkable, discard current x y, then turn right and walk again.
-		else {
-			front_x = x;			// actually we don't need to do this, but w/e
-			front_y = y;
-			System.out.println("bad step, mouse is at " + x + "," + y);
-			return 3;
+		if (heading == 2){
+			x = x + 1;
+			//System.out.println("we got a d");
 		}
-		/* System.out.println("WHY");
-		return 0;		// logic error, should not be here */
-	}	// end walker
+		if (heading == 3){
+			y = y - 1;
+			//System.out.println("we got a l");
+		}
+		System.out.println("walker done, mouse is now at " + x + "," + y);
+		System.out.println("heading is " + heading);
+		if (x==6 && y==5){
+			return false;	// ARRIVED!!
+		}
+		else
+			return true;	// ehh, keep going
+	} // end walker()
 		
 	public int getX(){
 		return x;
