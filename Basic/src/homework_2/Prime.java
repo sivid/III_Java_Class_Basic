@@ -2,7 +2,7 @@ package homework_2;
 
 public class Prime {
 	public static boolean isPrime(long checkThis){
-		for (int j=2;j<checkThis;j++){
+		for (int j=2;j<Math.sqrt(checkThis);j++){
 			if (checkThis%j == 0)
 				return false;
 		}
