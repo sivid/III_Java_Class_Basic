@@ -1,6 +1,6 @@
 package homework_2;
 
-public class IDGenerator {
+public class IDGenerator {							// copied from CheckID.java, suppressed some error messages
 	public static boolean RealCheckID(String inputID){				// returns true if input is valid
 		if (inputID.length() != 10){
 			System.err.println("input was not 10 chars");
@@ -39,11 +39,11 @@ public class IDGenerator {
 		}
 		checkSum = headLetterIntOne + headLetterIntTwo*9 + arrayNum[0]*8 + arrayNum[1]*7 + arrayNum[2]*6 + arrayNum[3]*5
 					+ arrayNum[4]*4 + arrayNum[5]*3 + arrayNum[6]*2 + arrayNum[7]*1 + arrayNum[8]*1;
-		System.out.println("Checksum is " + checkSum);
+		//System.out.println("Checksum is " + checkSum);
 		if (checkSum%10==0)
 			return true;
 		else {
-			System.err.println("something's wrong with this ID");
+			//System.err.println("something's wrong with this ID");
 			return false;
 		}
 	} // end RealCheckID()
@@ -58,6 +58,10 @@ public class IDGenerator {
 		}
 		// we assume that the user will put in the leading alphabet and M/F as sex
 		tempNewID[0] = args[0].substring(0, 1);
+		if (tempNewID[0].equals("L") || tempNewID[0].equals("R") || tempNewID[0].equals("S") || tempNewID[0].equals("Y")){
+			System.err.println("head letters L R S Y are not allowed");
+			System.exit(1);
+		}
 		if (args[1].equals("M"))
 			tempNewID[1] = "1";
 		else if (args[1].equals("F"))
@@ -70,7 +74,7 @@ public class IDGenerator {
 		while(notDone){
 			for (int i=2; i<=9; i++){								// this loop creates 
 				tempNewID[i] = Integer.toString( 0 + (int)(Math.random()*10)  );
-				System.out.println("tempNewID[i] " + tempNewID[i]);
+				//System.out.println("tempNewID[i] " + tempNewID[i]);
 			}
 			StringBuffer tempBuff = new StringBuffer();
 			for (int j=0; j<tempNewID.length; j++)
@@ -81,5 +85,4 @@ public class IDGenerator {
 		}
 		System.out.println("our new id is " + newID);
 	}
-
 }

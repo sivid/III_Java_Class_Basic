@@ -58,8 +58,6 @@ public class CheckID {
 		if (!RealCheckID(inputID))									// input is not valid
 			System.exit(1);
 		else
-			System.out.println("yay it passed");
-
-		
+			System.out.println("yay " + args[0] + " passed");
 	} // end main()
 }
